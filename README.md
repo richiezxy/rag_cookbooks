@@ -1,261 +1,126 @@
 # rag_cookbooks
 
-Build your own smart AI that can read documents and answer questions.
+> A notebook-first **RAG lab** for experimenting with retrieval, vector databases, and multimodal workflows.
 
-This repository is a **beginner-friendly, notebook-based course + lab** for Retrieval-Augmented Generation (RAG):
-
-**AI + Search + Your Data = Smarter Answers**
-
----
-
-## Course Goal
-
-By the end of this course path, you will build a simple AI assistant that can:
-- read documents,
-- search for relevant information,
-- answer questions using that information.
-
-No prior AI experience required.
+If you landed here and thought “what is this actually?”, this is the short answer:
+- This is **not** a packaged app or library.
+- This **is** a curated set of notebooks for learning and demoing Retrieval-Augmented Generation (RAG).
+- You can start fast with [`workshop_series/basic_rag.ipynb`](workshop_series/basic_rag.ipynb), then level up from there.
 
 ---
 
-## TL;DR (Fast Start)
+## TL;DR Start Here
 
-1. Start the vector database stack:
+1. Start vector infrastructure (Milvus stack):
    ```bash
    docker compose up -d
    ```
-   (uses [`docker-compose.yml`](docker-compose.yml))
+   Uses [`docker-compose.yml`](docker-compose.yml).
 
-2. Open Jupyter and run these notebooks in order:
-   1. [`workshop_series/basic_rag.ipynb`](workshop_series/basic_rag.ipynb)
-   2. [`workshop_series/improving_rag.ipynb`](workshop_series/improving_rag.ipynb)
-   3. [`workshop_series/multimodal_rag.ipynb`](workshop_series/multimodal_rag.ipynb)
+2. Open Jupyter and run this path:
+   - 1️⃣ [`workshop_series/basic_rag.ipynb`](workshop_series/basic_rag.ipynb)
+   - 2️⃣ [`workshop_series/improving_rag.ipynb`](workshop_series/improving_rag.ipynb)
+   - 3️⃣ [`workshop_series/multimodal_rag.ipynb`](workshop_series/multimodal_rag.ipynb)
 
-3. Explore all notebook options in [`docs/NOTEBOOK_INDEX.md`](docs/NOTEBOOK_INDEX.md).
-
----
-
-## Course Structure
-
-## Unit 1 — What is AI and How Does It Answer Questions?
-
-### Lesson 1.1 — What is AI?
-**Learn:**
-- What AI is
-- Familiar examples: ChatGPT, Siri, Alexa
-
-**Activity:**
-- Ask an AI assistant a few questions.
-- Observe how responses are generated.
-
-### Lesson 1.2 — Why AI Sometimes Gets Things Wrong
-**Learn:**
-- AI predicts from patterns.
-- AI does not automatically know your private documents.
-
-**Simple example:**
-AI cannot know your homework unless you provide your homework.
-
-### Lesson 1.3 — What is RAG (Big Idea)
-**Formula:**
-
-**AI + Search + Your Data = Smart Answers**
-
-**Concepts:**
-- Your data = a library
-- Retriever = search engine
-- LLM = answer generator
+3. Browse all notebook options in [`docs/NOTEBOOK_INDEX.md`](docs/NOTEBOOK_INDEX.md).
 
 ---
 
-## Unit 2 — Teaching AI Using Documents
+## What this repo contains
 
-### Lesson 2.1 — Loading Documents
-**Learn:**
-How to provide data such as:
-- `.txt` files (see [`city_data/`](city_data/))
-- multilingual corpora (see [`langchain/chinese_examples/chinese_city_data/`](langchain/chinese_examples/chinese_city_data/), [`langchain/french_examples/french_city_data/`](langchain/french_examples/french_city_data/), [`langchain/polish_examples/polish_city_data/`](langchain/polish_examples/polish_city_data/))
+### Learning tracks
+- **Workshop track**: [`workshop_series/`](workshop_series/) (beginner → improved → multimodal)
+- **LangChain track**: [`langchain/`](langchain/) (including multilingual variants)
+- **LlamaIndex track**: [`llamaindex/`](llamaindex/)
 
-**Goal:**
-AI can access your information source.
+### Data
+- Base city corpus: [`city_data/`](city_data/)
+- Language-specific corpora:
+  - Chinese: [`langchain/chinese_examples/chinese_city_data/`](langchain/chinese_examples/chinese_city_data/)
+  - French: [`langchain/french_examples/french_city_data/`](langchain/french_examples/french_city_data/)
+  - Polish: [`langchain/polish_examples/polish_city_data/`](langchain/polish_examples/polish_city_data/)
 
-### Lesson 2.2 — Splitting Documents into Pieces (Chunking)
-**Why:**
-Models do not process giant files efficiently in one shot.
-
-So we split documents into chunks.
-
-**Analogy:**
-Book → chapters/pages.
-
-### Lesson 2.3 — Turning Words into Numbers (Embeddings)
-**Simple explanation:**
-Text is converted into vectors (numbers) so similarity can be measured.
-
-This enables semantic search (“meaning match,” not just keyword match).
+### Infrastructure (local vector DB)
+- Compose stack: [`docker-compose.yml`](docker-compose.yml)
+- Embedded single-container startup script: [`standalone_embed.sh`](standalone_embed.sh)
+- Embedded etcd config: [`embedEtcd.yaml`](embedEtcd.yaml)
 
 ---
 
-## Unit 3 — Building AI Memory (Vector Database)
+## Concept map: what you are practicing
 
-### Lesson 3.1 — What is a Vector Database?
-Think of it as a smart library index that stores meaning-aware vectors.
+RAG in this repo follows a recurring pattern:
 
-In this repo, Milvus is the primary vector store path:
-- [`docker-compose.yml`](docker-compose.yml)
-- [`standalone_embed.sh`](standalone_embed.sh)
-- [`embedEtcd.yaml`](embedEtcd.yaml)
+1. **Load documents** (city data files, wiki-scraped text, or mixed media).
+2. **Chunk/split text**.
+3. **Create embeddings** with a model.
+4. **Store vectors** in Milvus/FAISS.
+5. **Retrieve top-k context** for a question.
+6. **Generate answer** with an LLM constrained by retrieved context.
+7. Optionally **evaluate/improve** retrieval quality and prompt strategy.
 
-(You may also see FAISS examples, e.g. [`langchain/starwars_faiss.ipynb`](langchain/starwars_faiss.ipynb)).
-
-### Lesson 3.2 — Saving Knowledge
-Typical pipeline:
-1. Load documents
-2. Split into chunks
-3. Create embeddings
-4. Store vectors
-
-Now your AI can retrieve relevant context before answering.
+If you're new to these concepts:
+- RAG overview: <https://www.promptingguide.ai/research/rag>
+- Milvus docs: <https://milvus.io/docs>
+- LangChain docs: <https://python.langchain.com/docs/introduction/>
+- LlamaIndex docs: <https://docs.llamaindex.ai/>
 
 ---
 
-## Unit 4 — Teaching AI to Search
+## Setup details
 
-### Lesson 4.1 — Finding the Right Information
-When a user asks a question, the retriever finds top-matching chunks.
+### Prerequisites
+- Python environment with Jupyter
+- Docker Engine or Docker Desktop
+- Provider API keys (varies by notebook; check first code cells)
 
-### Lesson 4.2 — Why Search Makes AI Smarter
-- Without retrieval: model may guess ❌
-- With retrieval: model can ground answers in provided data ✅
+### Milvus startup options
 
----
+#### Option A (recommended): Docker Compose
+```bash
+docker compose up -d
+```
+This launches etcd + minio + milvus (see [`docker-compose.yml`](docker-compose.yml)).
 
-## Unit 5 — Making the AI Answer Questions
+#### Option B: Embedded standalone script
+```bash
+bash standalone_embed.sh start
+```
+Useful if you want the one-container embedded mode (see [`standalone_embed.sh`](standalone_embed.sh)).
 
-### Lesson 5.1 — Combining Search + AI Brain
-Process:
-
-User asks question
-↓
-Retriever finds relevant context
-↓
-LLM reads context
-↓
-LLM answers with evidence
-
-### Lesson 5.2 — Build Your First QA Bot
-Use a notebook to build a bot that answers questions from:
-- class notes,
-- short stories,
-- local text docs.
-
-Best starting point: [`workshop_series/basic_rag.ipynb`](workshop_series/basic_rag.ipynb)
+Stop/cleanup examples:
+```bash
+docker compose down
+bash standalone_embed.sh stop
+bash standalone_embed.sh delete
+```
 
 ---
 
-## Unit 6 — Improving the AI
+## Repo navigation guide
 
-### Lesson 6.1 — Make Answers More Accurate
-Common levers:
-- better chunk sizing,
-- better retrieval settings,
-- clearer prompts.
-
-Practice notebook: [`workshop_series/improving_rag.ipynb`](workshop_series/improving_rag.ipynb)
-
-### Lesson 6.2 — Reducing Mistakes
-Constrain outputs to retrieved/source context where possible.
+- Need a complete notebook menu? → [`docs/NOTEBOOK_INDEX.md`](docs/NOTEBOOK_INDEX.md)
+- Need beginner flow? → [`workshop_series/basic_rag.ipynb`](workshop_series/basic_rag.ipynb)
+- Need multilingual examples? → [`langchain/chinese_examples/`](langchain/chinese_examples/), [`langchain/french_examples/`](langchain/french_examples/), [`langchain/polish_examples/`](langchain/polish_examples/)
+- Need vector infra details? → [`docker-compose.yml`](docker-compose.yml)
 
 ---
 
-## Unit 7 — Advanced Features (Optional)
+## ⚡ GlitchHealer (10% mode)
 
-### Lesson 7.1 — Chat with PDFs
-Pattern extension: parse PDFs, chunk, embed, retrieve, answer.
+When things wobble, here’s the fast triage pass:
 
-### Lesson 7.2 — Chat with Multiple Documents
-Search over multiple sources/corpora in one retrieval layer.
-
-### Lesson 7.3 — Add Memory
-Add conversational memory/state for multi-turn assistants.
-
----
-
-## Final Project
-
-Build your own study assistant that can:
-- read documents,
-- answer questions,
-- help with homework/study prep.
-
-Project ideas:
-- Homework helper
-- Book question bot
-- Study guide bot
-
----
-
-## Where each concept lives in this repo
-
-- Beginner flow: [`workshop_series/`](workshop_series/)
-- LangChain examples: [`langchain/`](langchain/)
-- LlamaIndex example: [`llamaindex/solar_milvus_mpnet.ipynb`](llamaindex/solar_milvus_mpnet.ipynb)
-- Full notebook map: [`docs/NOTEBOOK_INDEX.md`](docs/NOTEBOOK_INDEX.md)
-
----
-
-## Tools used in this repo
-
-- Python + Jupyter notebooks
-- LLM APIs (varies by notebook)
-- Vector stores:
-  - Milvus (primary local infra path)
-  - FAISS (example notebook path)
-
----
-
-## Simple Visual Summary
-
-Documents 📄
-
-↓
-
-Split into chunks ✂️
-
-↓
-
-Convert to vectors 🔢
-
-↓
-
-Store in vector DB 📚
-
-↓
-
-User asks question ❓
-
-↓
-
-Retrieve context 🔍
-
-↓
-
-AI answers 🤖
-
----
-
-## ⚡ GlitchHealer (quick troubleshooting)
-
-1. Milvus not reachable?
+1. **Milvus not reachable?**
    - run `docker compose ps`
-   - verify ports in [`docker-compose.yml`](docker-compose.yml) (especially `19530`, `9091`)
-2. Notebook can’t call model API?
-   - check env vars/API keys in notebook setup cells
-3. Answers feel weak?
-   - tune chunk size, retriever top-k, and prompt constraints
-4. Notebook feels stale/inconsistent?
-   - restart kernel and re-run top-to-bottom
+   - verify `19530` and `9091` are exposed in [`docker-compose.yml`](docker-compose.yml)
+2. **Notebook can’t call model API?**
+   - check env vars/API keys in the notebook's first setup cells
+3. **Retrieval quality feels bad?**
+   - inspect chunk size/overlap + embedding model choice
+4. **Notebook output looks weird/stale?**
+   - clear outputs and re-run clean from top
+
+Think of this repo as a **workbench**: experiments first, polish second.
 
 ---
 
